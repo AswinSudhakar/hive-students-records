@@ -25,6 +25,7 @@ class _HomescreenState extends State<Homescreen> {
   List<Student> _students = [];
 
   //function to show all listbfrom db
+
   Future<void> _loadStudent() async {
     _students = await _studentService.getStudent();
     setState(() {});
@@ -143,102 +144,104 @@ class _HomescreenState extends State<Homescreen> {
     await showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Add New Student'),
-            content: SizedBox(
-              height: 330,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 10,
-                children: [
-                  //four fields for student
-                  TextField(
-                    focusNode: _focusnode1, // maxLength: 15,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: "Name"),
-                    controller: _namecntroler,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode2);
-                    },
-                  ),
-                  TextField(
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode3);
-                    },
-                    focusNode: _focusnode2,
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text('Add New Student'),
+              content: SizedBox(
+                height: 330,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 10,
+                  children: [
+                    //four fields for student
+                    TextField(
+                      focusNode: _focusnode1, // maxLength: 15,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: "Name"),
+                      controller: _namecntroler,
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode2);
+                      },
+                    ),
+                    TextField(
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode3);
+                      },
+                      focusNode: _focusnode2,
 
-                    // maxLength: 2,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Age'),
-                    controller: _agecntroler,
-                  ),
-                  TextField(
-                    focusNode: _focusnode3,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode4);
-                    },
-                    // maxLength: 15,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Course'),
-                    controller: _subjectcntroler,
-                  ),
-                  TextField(
-                    focusNode: _focusnode4,
-                    style: TextStyle(),
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 20.0, horizontal: 10.0),
-                        border: OutlineInputBorder(),
-                        hintText: 'Address'),
-                    controller: _addresscntroler,
-                  ),
-                ],
+                      // maxLength: 2,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: 'Age'),
+                      controller: _agecntroler,
+                    ),
+                    TextField(
+                      focusNode: _focusnode3,
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode4);
+                      },
+                      // maxLength: 15,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: 'subject'),
+                      controller: _subjectcntroler,
+                    ),
+                    TextField(
+                      focusNode: _focusnode4,
+                      style: TextStyle(),
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 10.0),
+                          border: OutlineInputBorder(),
+                          hintText: 'Address'),
+                      controller: _addresscntroler,
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            //Two buttons for add and cancel
-            actions: [
-              ElevatedButton(
-                onPressed: () async {
-                  final name = _namecntroler.text;
-                  final age = _agecntroler.text;
-                  final subject = _subjectcntroler.text;
-                  final address = _addresscntroler.text;
+              //Two buttons for add and cancel
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    final name = _namecntroler.text;
+                    final age = _agecntroler.text;
+                    final subject = _subjectcntroler.text;
+                    final address = _addresscntroler.text;
 
-                  if (name.isEmpty ||
-                      age.isEmpty ||
-                      subject.isEmpty ||
-                      address.isEmpty) {
-                    return;
-                  }
-                  {
-                    final newStudent = Student(
-                        name: _namecntroler.text,
-                        age: int.parse(_agecntroler.text),
-                        subject: _subjectcntroler.text,
-                        address: _addresscntroler.text);
+                    if (name.isEmpty ||
+                        age.isEmpty ||
+                        subject.isEmpty ||
+                        address.isEmpty) {
+                      return;
+                    }
+                    {
+                      final newStudent = Student(
+                          name: _namecntroler.text,
+                          age: int.parse(_agecntroler.text),
+                          subject: _subjectcntroler.text,
+                          address: _addresscntroler.text);
 
-                    await _studentService.addStudent(newStudent);
+                      await _studentService.addStudent(newStudent);
 
-                    _namecntroler.clear();
-                    _agecntroler.clear();
-                    _addresscntroler.clear();
-                    _subjectcntroler.clear();
+                      _namecntroler.clear();
+                      _agecntroler.clear();
+                      _addresscntroler.clear();
+                      _subjectcntroler.clear();
 
+                      Navigator.pop(context);
+                      _loadStudent();
+                    }
+                  },
+                  child: Text('ADD'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     Navigator.pop(context);
-                    _loadStudent();
-                  }
-                },
-                child: Text('ADD'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('CANCEL'),
-              )
-            ],
+                  },
+                  child: Text('CANCEL'),
+                )
+              ],
+            ),
           );
         });
   }
@@ -255,88 +258,90 @@ class _HomescreenState extends State<Homescreen> {
     await showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Edit  Student'),
-            content: SizedBox(
-              height: 340,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 10,
-                children: [
-                  //four fields for student
-                  TextField(
-                    focusNode: _focusnode1,
-                    // maxLength: 15,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: "Name"),
-                    controller: _namecntroler,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode2);
-                    },
-                  ),
-                  TextField(
-                    focusNode: _focusnode2,
-                    controller: _agecntroler,
-                    // maxLength: 2,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Age'),
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode3);
-                    },
-                  ),
-                  TextField(
-                    focusNode: _focusnode3,
-                    //
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text('Edit  Student'),
+              content: SizedBox(
+                height: 340,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 10,
+                  children: [
+                    //four fields for student
+                    TextField(
+                      focusNode: _focusnode1,
+                      // maxLength: 15,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: "Name"),
+                      controller: _namecntroler,
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode2);
+                      },
+                    ),
+                    TextField(
+                      focusNode: _focusnode2,
+                      controller: _agecntroler,
+                      // maxLength: 2,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: 'Age'),
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode3);
+                      },
+                    ),
+                    TextField(
+                      focusNode: _focusnode3,
+                      //
 
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Course'),
-                    controller: _subjectcntroler,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_focusnode4);
-                    },
-                  ),
-                  TextField(
-                    focusNode: _focusnode4,
-                    style: TextStyle(),
-                    decoration: InputDecoration(
-                        // contentPadding: EdgeInsets.symmetric(
-                        //     vertical: 10.0, horizontal: 10.0),
-                        border: OutlineInputBorder(),
-                        hintText: 'Address'),
-                    controller: _addresscntroler,
-                  ),
-                ],
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), hintText: 'Course'),
+                      controller: _subjectcntroler,
+                      onSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_focusnode4);
+                      },
+                    ),
+                    TextField(
+                      focusNode: _focusnode4,
+                      style: TextStyle(),
+                      decoration: InputDecoration(
+                          // contentPadding: EdgeInsets.symmetric(
+                          //     vertical: 10.0, horizontal: 10.0),
+                          border: OutlineInputBorder(),
+                          hintText: 'Address'),
+                      controller: _addresscntroler,
+                    ),
+                  ],
+                ),
               ),
+
+              //Two buttons for add and cancel
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    student.name = _namecntroler.text;
+                    student.age = int.parse(_agecntroler.text);
+                    student.subject = _subjectcntroler.text;
+                    student.address = _addresscntroler.text;
+
+                    await _studentService.updteStudent(index, student);
+                    _namecntroler.clear();
+                    _agecntroler.clear();
+                    _addresscntroler.clear();
+                    _subjectcntroler.clear();
+
+                    Navigator.pop(context);
+                    _loadStudent();
+                  },
+                  child: Text('UPDATE'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('CANCEL'),
+                )
+              ],
             ),
-
-            //Two buttons for add and cancel
-            actions: [
-              ElevatedButton(
-                onPressed: () async {
-                  student.name = _namecntroler.text;
-                  student.age = int.parse(_agecntroler.text);
-                  student.subject = _subjectcntroler.text;
-                  student.address = _addresscntroler.text;
-
-                  await _studentService.updteStudent(index, student);
-                  _namecntroler.clear();
-                  _agecntroler.clear();
-                  _addresscntroler.clear();
-                  _subjectcntroler.clear();
-
-                  Navigator.pop(context);
-                  _loadStudent();
-                },
-                child: Text('UPDATE'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('CANCEL'),
-              )
-            ],
           );
         });
   }

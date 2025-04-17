@@ -8,10 +8,7 @@ void main() async {
   //initialise hive
   await Hive.initFlutter();
 
-  //register adaptor
   Hive.registerAdapter(StudentAdapter());
-
-  //open a box
 
   await StudentService().openBox();
 
